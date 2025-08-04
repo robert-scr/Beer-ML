@@ -8,7 +8,7 @@ import { BEER_LIST } from '@/lib/constants'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { profile, completedBeers, getCompletionStatus } = useBeerRatingStore()
+  const { profile, completedBeers, getCompletionStatus, setSurveyEndedEarly } = useBeerRatingStore()
 
   // Redirect if profile or preferences are not complete
   useEffect(() => {
@@ -24,6 +24,22 @@ export default function DashboardPage() {
 
   const { completed, total } = getCompletionStatus()
   const progressPercentage = (completed / total) * 100
+
+  const handleEndSurveyEarly = () => {
+    if (completed === 0) {
+      alert('Please rate at least one beer before ending the survey.')
+      return
+    }
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to end the survey early? You have only completed ${completed} out of ${total} beer ratings. Your partial data will still be valuable for our research.`
+    )
+    
+    if (confirmed) {
+      setSurveyEndedEarly(true)
+      router.push('/complete')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -54,6 +70,21 @@ export default function DashboardPage() {
                 : `${total - completed} beer${total - completed !== 1 ? 's' : ''} remaining`
               }
             </p>
+            
+            {/* End Survey Early Button */}
+            {completed > 0 && completed < total && (
+              <div className="mt-4 pt-4 border-t border-blue-200">
+                <p className="text-blue-600 text-sm mb-2">
+                  Don't want to rate all beers? You can end the survey early.
+                </p>
+                <button
+                  onClick={handleEndSurveyEarly}
+                  className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-2 px-4 rounded-md transition duration-200"
+                >
+                  End Survey Early
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Beer Grid */}

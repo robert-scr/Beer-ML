@@ -25,11 +25,13 @@ export interface BeerRatingState {
   preferences: TastePreferences
   completedBeers: boolean[] // Track which beers have been rated
   isSubmitting: boolean
+  surveyEndedEarly: boolean // Track if survey was ended early
   
   setProfile: (profile: UserProfile) => void
   setPreferences: (preferences: TastePreferences) => void
   setBeerCompleted: (beerIndex: number) => void
   setIsSubmitting: (isSubmitting: boolean) => void
+  setSurveyEndedEarly: (ended: boolean) => void
   reset: () => void
   getCompletionStatus: () => { completed: number; total: number }
 }
@@ -59,6 +61,7 @@ export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
   preferences: initialPreferences,
   completedBeers: new Array(10).fill(false), // 10 beers, all initially not completed
   isSubmitting: false,
+  surveyEndedEarly: false,
   
   setProfile: (profile) => set({ profile }),
   setPreferences: (preferences) => set({ preferences }),
@@ -68,6 +71,7 @@ export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
     )
   })),
   setIsSubmitting: (isSubmitting) => set({ isSubmitting }),
+  setSurveyEndedEarly: (ended) => set({ surveyEndedEarly: ended }),
   getCompletionStatus: () => {
     const { completedBeers } = get()
     return {
@@ -80,5 +84,6 @@ export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
     preferences: initialPreferences,
     completedBeers: new Array(10).fill(false),
     isSubmitting: false,
+    surveyEndedEarly: false,
   }),
 }))

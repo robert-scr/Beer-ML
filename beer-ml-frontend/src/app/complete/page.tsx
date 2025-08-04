@@ -6,12 +6,14 @@ import { useBeerRatingStore } from '@/store/beerRatingStore'
 
 export default function CompletePage() {
   const router = useRouter()
-  const { reset } = useBeerRatingStore()
+  const { reset, surveyEndedEarly, getCompletionStatus } = useBeerRatingStore()
 
   // Reset the store when the component mounts
   useEffect(() => {
     reset()
   }, [reset])
+
+  const { completed, total } = getCompletionStatus()
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -36,11 +38,14 @@ export default function CompletePage() {
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Study Complete!
+            {surveyEndedEarly ? 'Survey Ended Early' : 'Study Complete!'}
           </h1>
           
           <p className="text-lg text-gray-600 mb-6">
-            Thank you for participating in our beer preference study. Your responses have been successfully recorded and will help us understand taste preferences across different demographics.
+            {surveyEndedEarly 
+              ? `Thank you for participating in our beer preference study! You completed ${completed} out of ${total} beer ratings. Even partial data is valuable for our research and will help us understand taste preferences across different demographics.`
+              : 'Thank you for participating in our beer preference study. Your responses have been successfully recorded and will help us understand taste preferences across different demographics.'
+            }
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
