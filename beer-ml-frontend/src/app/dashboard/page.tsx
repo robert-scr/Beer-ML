@@ -8,7 +8,7 @@ import { BEER_LIST } from '@/lib/constants'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { profile, preferences, completedBeers, getCompletionStatus } = useBeerRatingStore()
+  const { profile, completedBeers, getCompletionStatus } = useBeerRatingStore()
 
   // Redirect if profile or preferences are not complete
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function DashboardPage() {
                   <p className="text-gray-700 font-medium mb-4">{beer}</p>
                   
                   <Link
-                    href={`/beer_${beerNumber}`}
+                    href={`/beer/${beerNumber}`}
                     className={`inline-block w-full text-center py-2 px-4 rounded-md font-medium transition duration-200 ${
                       isCompleted
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'

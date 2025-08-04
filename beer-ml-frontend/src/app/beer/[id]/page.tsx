@@ -49,7 +49,7 @@ export default function BeerPage() {
             <div className="bg-white rounded-lg shadow-md p-6 text-center">
               <h1 className="text-2xl font-bold text-red-600 mb-4">Beer Not Found</h1>
               <p className="text-gray-600 mb-6">
-                The beer you're looking for doesn't exist.
+                The beer you&apos;re looking for doesn&apos;t exist.
               </p>
               <Link
                 href="/dashboard"

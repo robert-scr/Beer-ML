@@ -19,7 +19,7 @@ export default function HomePage() {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">What You'll Do</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">What You&apos;ll Do</h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="text-center">
@@ -58,7 +58,7 @@ export default function HomePage() {
             <ul className="text-gray-600 space-y-2 text-sm">
               <li>• Takes approximately 10-15 minutes to complete</li>
               <li>• Complete beers in any order at your own pace</li>
-              <li>• Each beer has its own dedicated page (e.g., /beer_1, /beer_2)</li>
+              <li>• Each beer has its own dedicated page (e.g., /beer/1, /beer/2)</li>
               <li>• All data is collected anonymously</li>
               <li>• Results are used for research purposes only</li>
               <li>• You can stop at any time and resume later</li>

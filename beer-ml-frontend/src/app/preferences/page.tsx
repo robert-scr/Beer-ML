@@ -42,7 +42,7 @@ export default function PreferencesPage() {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Taste Preferences</h1>
           <p className="text-gray-600 mb-8">
-            Please indicate your preferences on the following scales. After this, you'll be able to rate beers individually at your own pace.
+            Please indicate your preferences on the following scales. After this, you&apos;ll be able to rate beers individually at your own pace.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-8">
