@@ -70,7 +70,7 @@ cython_debug/
 # Flask/Backend specific
 instance/
 .webassets-cache
-*.db
+#*.db
 *.sqlite
 *.sqlite3
 #beer_study.db*
