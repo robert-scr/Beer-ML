@@ -11,6 +11,7 @@ export default function NonAlcoholicBeerPage() {
   const router = useRouter()
   const params = useParams()
   const {
+    userId,
     profile,
     preferences,
     completedBeers,
@@ -81,7 +82,8 @@ export default function NonAlcoholicBeerPage() {
 
     try {
       const payload: BeerRatingPayload = {
-        beer_name: currentBeer,
+        user_id: userId,
+        beer_name: `Beer ${beerLetter}`,
         rating,
         age: profile.age,
         gender: profile.gender,
@@ -154,7 +156,7 @@ export default function NonAlcoholicBeerPage() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-blue-900">
-                Non-Alcoholic Beer {beerLetter}: {currentBeer}
+                Non-Alcoholic Beer {beerLetter}
               </h2>
               {isCompleted && (
                 <div className="flex items-center text-green-600">

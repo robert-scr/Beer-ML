@@ -1,5 +1,11 @@
 # Beer Preference Study - Full Stack .gitignore
 
+# Centralized Configuration
+config.env.backup
+
+# Auto-generated Environment Files
+beer-ml-frontend/.env.local
+
 # Python / Backend
 __pycache__/
 *.py[cod]

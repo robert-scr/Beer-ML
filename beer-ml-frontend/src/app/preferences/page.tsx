@@ -105,7 +105,7 @@ export default function PreferencesPage() {
               <select
                 value={formData.beer_frequency}
                 onChange={(e) => handleSelectChange('beer_frequency', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 {BEER_FREQUENCY_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>

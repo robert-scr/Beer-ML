@@ -129,7 +129,10 @@ export default function DashboardPage() {
                     )}
                   </div>
                   
-                  <p className="text-gray-700 font-medium mb-4">{beer}</p>
+                  <div className="text-center mb-4">
+                    <div className="text-2xl mb-2">🍺</div>
+                    <p className="text-gray-600 text-sm">Rate this beer type</p>
+                  </div>
                   
                   <Link
                     href={`${beerRoutePrefix}${drinksAlcohol ? index + 1 : String.fromCharCode(65 + index)}`}

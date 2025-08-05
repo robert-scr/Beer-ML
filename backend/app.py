@@ -20,6 +20,7 @@ class BeerRating(db.Model):
     __tablename__ = 'beer_ratings'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.String(36), nullable=False)  # UUID to track which user submitted the rating
     beer_name = db.Column(db.String(100), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     
@@ -57,7 +58,7 @@ def submit_rating():
         
         # Validate required fields
         required_fields = [
-            'beer_name', 'rating', 'age', 'gender', 'latitude', 'longitude',
+            'user_id', 'beer_name', 'rating', 'age', 'gender', 'latitude', 'longitude',
             'dark_white_chocolate', 'curry_cucumber', 'vanilla_lemon', 'caramel_wasabi',
             'blue_mozzarella', 'sparkling_sweet', 'barbecue_ketchup',
             'tropical_winter', 'early_night', 'beer_frequency', 'drinks_alcohol'
@@ -93,6 +94,7 @@ def submit_rating():
         
         # Create new beer rating record
         rating_record = BeerRating(
+            user_id=data['user_id'],
             beer_name=data['beer_name'],
             rating=data['rating'],
             age=data['age'],

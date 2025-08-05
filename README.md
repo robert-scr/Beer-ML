@@ -2,6 +2,41 @@
 
 A full-stack web application for conducting beer preference studies with real-time data collection and analysis.
 
+## 🚀 Quick Start
+
+### 1. Configure Network Settings (One-Time Setup)
+```bash
+# Automatically detect and configure your IP address
+./configure-ip.sh detect
+```
+
+### 2. Start the Application
+```bash
+# Terminal 1: Start the backend
+cd backend
+./start.sh
+
+# Terminal 2: Start the frontend  
+./start-frontend.sh
+```
+
+### 3. Access the Application
+- **Frontend**: http://YOUR_IP:3000
+- **Backend API**: http://YOUR_IP:5000
+
+## ⚙️ Configuration
+
+All network configuration is centralized in `config.env`. You only need to update the IP address in one place:
+
+```bash
+# config.env
+IP_ADDRESS=10.100.91.169  # <- Change this to your IP address
+BACKEND_PORT=5000
+FRONTEND_PORT=3000
+```
+
+The scripts automatically generate the necessary environment files from this central configuration.
+
 ## 🏗️ Architecture
 
 - **Frontend**: Next.js 14 with App Router, TypeScript, TailwindCSS (`beer-ml-frontend/`)

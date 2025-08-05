@@ -11,6 +11,7 @@ export default function BeerPage() {
   const router = useRouter()
   const params = useParams()
   const {
+    userId,
     profile,
     preferences,
     completedBeers,
@@ -81,7 +82,8 @@ export default function BeerPage() {
 
     try {
       const payload: BeerRatingPayload = {
-        beer_name: currentBeer,
+        user_id: userId,
+        beer_name: `Beer ${beerNumber}`,
         rating,
         age: profile.age,
         gender: profile.gender,
@@ -152,12 +154,31 @@ export default function BeerPage() {
 
           {/* Beer Information */}
           <div className="text-center mb-8">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-6">
-              <h2 className="text-2xl font-bold text-amber-800 mb-2">{currentBeer}</h2>
-              <p className="text-amber-600">
-                Imagine the taste, aroma, and overall experience of this beer type.
-              </p>
+                      {/* Beer Information */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-blue-900">
+                Beer {beerNumber}
+              </h2>
+              {isCompleted && (
+                <div className="flex items-center text-green-600">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
+            
+            <div className="text-blue-700 text-center">
+              <div className="text-4xl mb-3">🍺</div>
+              <p className="text-lg font-medium mb-2">Beer {beerNumber}</p>
+              <p>Please rate how much you would like this type of beer.</p>
+            </div>
+          </div>
           </div>
 
           {/* Success Message */}

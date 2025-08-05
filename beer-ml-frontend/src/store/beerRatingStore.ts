@@ -1,5 +1,14 @@
 import { create } from 'zustand'
 
+// Generate a UUID v4
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
 export interface UserProfile {
   age: number | null
   gender: string
@@ -22,6 +31,7 @@ export interface TastePreferences {
 }
 
 export interface BeerRatingState {
+  userId: string // UUID to track user across all their beer ratings
   profile: UserProfile
   preferences: TastePreferences
   completedBeers: boolean[] // Track which beers have been rated
@@ -59,9 +69,10 @@ const initialPreferences: TastePreferences = {
 }
 
 export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
+  userId: generateUUID(), // Generate unique user ID when store is created
   profile: initialProfile,
   preferences: initialPreferences,
-  completedBeers: new Array(10).fill(false), // 10 beers, all initially not completed
+  completedBeers: new Array(9).fill(false), // 9 alcoholic beers (largest list), all initially not completed
   isSubmitting: false,
   surveyEndedEarly: false,
   
@@ -75,16 +86,21 @@ export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
   setIsSubmitting: (isSubmitting) => set({ isSubmitting }),
   setSurveyEndedEarly: (ended) => set({ surveyEndedEarly: ended }),
   getCompletionStatus: () => {
-    const { completedBeers } = get()
+    const { completedBeers, preferences } = get()
+    const drinksAlcohol = preferences.drinks_alcohol
+    const totalBeers = drinksAlcohol ? 9 : 7 // 9 alcoholic or 7 non-alcoholic
+    const relevantCompleted = completedBeers.slice(0, totalBeers)
+    
     return {
-      completed: completedBeers.filter(Boolean).length,
-      total: completedBeers.length
+      completed: relevantCompleted.filter(Boolean).length,
+      total: totalBeers
     }
   },
   reset: () => set({
+    userId: generateUUID(), // Generate new user ID on reset
     profile: initialProfile,
     preferences: initialPreferences,
-    completedBeers: new Array(10).fill(false),
+    completedBeers: new Array(9).fill(false),
     isSubmitting: false,
     surveyEndedEarly: false,
   }),
