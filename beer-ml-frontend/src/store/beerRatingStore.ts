@@ -64,7 +64,7 @@ const initialPreferences: TastePreferences = {
   barbecue_ketchup: 5,
   tropical_winter: 5,
   early_night: 5,
-  beer_frequency: 'rarely',
+  beer_frequency: 'never',
   drinks_alcohol: true,
 }
 
@@ -88,7 +88,7 @@ export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({
   getCompletionStatus: () => {
     const { completedBeers, preferences } = get()
     const drinksAlcohol = preferences.drinks_alcohol
-    const totalBeers = drinksAlcohol ? 9 : 7 // 9 alcoholic or 7 non-alcoholic
+    const totalBeers = 9 // Both alcoholic and non-alcoholic lists now have 9 beers
     const relevantCompleted = completedBeers.slice(0, totalBeers)
     
     return {

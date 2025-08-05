@@ -84,7 +84,7 @@ def submit_rating():
                 return jsonify({'error': f'{field} must be between 0 and 10'}), 400
         
         # Validate beer frequency
-        valid_frequencies = ['never', 'rarely', 'often', 'very_often']
+        valid_frequencies = ['never', 'once_a_month', 'once_a_week', 'multiple_times_a_week']
         if data['beer_frequency'] not in valid_frequencies:
             return jsonify({'error': 'Invalid beer_frequency value'}), 400
         

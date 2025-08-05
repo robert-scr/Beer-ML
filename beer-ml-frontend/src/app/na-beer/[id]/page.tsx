@@ -176,7 +176,7 @@ export default function NonAlcoholicBeerPage() {
                 <strong>Type:</strong> Non-Alcoholic Beer
               </p>
               <p>
-                This is a simulation - please rate how much you think you would enjoy this type of non-alcoholic beer.
+                Please rate how much you enjoy this non-alcoholic beer.
               </p>
             </div>
           </div>
