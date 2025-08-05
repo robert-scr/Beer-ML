@@ -37,11 +37,13 @@ export default function BeerPage() {
   useEffect(() => {
     if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude) {
       router.push('/profile')
+    } else if (!preferences.beer_frequency || preferences.drinks_alcohol === undefined) {
+      router.push('/preferences')
     }
-  }, [profile, router])
+  }, [profile, preferences, router])
 
-  // Don't render if profile is incomplete or invalid beer
-  if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude || !isValidBeer || !currentBeer) {
+  // Don't render if profile or preferences are incomplete or invalid beer
+  if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude || !preferences.beer_frequency || preferences.drinks_alcohol === undefined || !isValidBeer || !currentBeer) {
     if (!isValidBeer) {
       return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -85,16 +87,17 @@ export default function BeerPage() {
         gender: profile.gender,
         latitude: profile.latitude,
         longitude: profile.longitude,
-        white_dark: preferences.white_dark,
-        curry_soup: preferences.curry_soup,
-        lemon_vanilla: preferences.lemon_vanilla,
-        salmon_chicken: preferences.salmon_chicken,
-        cucumber_pumpkin: preferences.cucumber_pumpkin,
-        espresso_latte: preferences.espresso_latte,
-        chili_risotto: preferences.chili_risotto,
-        grapefruit_banana: preferences.grapefruit_banana,
-        cheese_mozzarella: preferences.cheese_mozzarella,
-        almonds_honey: preferences.almonds_honey,
+        dark_white_chocolate: preferences.dark_white_chocolate,
+        curry_cucumber: preferences.curry_cucumber,
+        vanilla_lemon: preferences.vanilla_lemon,
+        caramel_wasabi: preferences.caramel_wasabi,
+        blue_mozzarella: preferences.blue_mozzarella,
+        sparkling_sweet: preferences.sparkling_sweet,
+        barbecue_ketchup: preferences.barbecue_ketchup,
+        tropical_winter: preferences.tropical_winter,
+        early_night: preferences.early_night,
+        beer_frequency: preferences.beer_frequency,
+        drinks_alcohol: preferences.drinks_alcohol,
       }
 
       await submitBeerRating(payload)

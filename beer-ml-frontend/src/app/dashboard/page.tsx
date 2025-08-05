@@ -4,35 +4,43 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useBeerRatingStore } from '@/store/beerRatingStore'
-import { BEER_LIST } from '@/lib/constants'
+import { BEER_LIST, NON_ALCOHOLIC_BEER_LIST } from '@/lib/constants'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { profile, completedBeers, getCompletionStatus, setSurveyEndedEarly } = useBeerRatingStore()
+  const { profile, preferences, completedBeers, getCompletionStatus, setSurveyEndedEarly } = useBeerRatingStore()
 
   // Redirect if profile or preferences are not complete
   useEffect(() => {
     if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude) {
       router.push('/profile')
+    } else if (!preferences.beer_frequency || preferences.drinks_alcohol === undefined) {
+      router.push('/preferences')
     }
-  }, [profile, router])
+  }, [profile, preferences, router])
 
-  // Don't render if profile is incomplete
-  if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude) {
+  // Don't render if profile or preferences are incomplete
+  if (!profile.age || !profile.gender || !profile.latitude || !profile.longitude || !preferences.beer_frequency || preferences.drinks_alcohol === undefined) {
     return null
   }
 
   const { completed, total } = getCompletionStatus()
   const progressPercentage = (completed / total) * 100
 
+  // Determine which beer list and routing to use based on alcohol preference
+  const drinksAlcohol = preferences.drinks_alcohol
+  const beerList = drinksAlcohol ? BEER_LIST : NON_ALCOHOLIC_BEER_LIST
+  const beerRoutePrefix = drinksAlcohol ? '/beer/' : '/na-beer/'
+  const beerLabelPrefix = drinksAlcohol ? 'Beer ' : 'Beer '
+
   const handleEndSurveyEarly = () => {
     if (completed === 0) {
-      alert('Please rate at least one beer before ending the survey.')
+      alert(`Please rate at least one ${drinksAlcohol ? 'beer' : 'non-alcoholic beer'} before ending the survey.`)
       return
     }
     
     const confirmed = window.confirm(
-      `Are you sure you want to end the survey early? You have only completed ${completed} out of ${total} beer ratings. Your partial data will still be valuable for our research.`
+      `Are you sure you want to end the survey early? You have only completed ${completed} out of ${total} ${drinksAlcohol ? 'beer' : 'non-alcoholic beer'} ratings. Your partial data will still be valuable for our research.`
     )
     
     if (confirmed) {
@@ -45,9 +53,11 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Beer Rating Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {drinksAlcohol ? 'Beer Rating Dashboard' : 'Non-Alcoholic Beer Rating Dashboard'}
+          </h1>
           <p className="text-gray-600 mb-6">
-            Rate each beer type below. You can complete them in any order and return to this page anytime.
+            Rate each {drinksAlcohol ? 'beer' : 'non-alcoholic beer'} type below. You can complete them in any order and return to this page anytime.
           </p>
 
           {/* Progress Overview */}
@@ -66,8 +76,8 @@ export default function DashboardPage() {
             </div>
             <p className="text-blue-700 text-sm">
               {completed === total 
-                ? '🎉 All beers completed! Thank you for your participation.' 
-                : `${total - completed} beer${total - completed !== 1 ? 's' : ''} remaining`
+                ? `🎉 All ${drinksAlcohol ? 'beers' : 'non-alcoholic beers'} completed! Thank you for your participation.` 
+                : `${total - completed} ${drinksAlcohol ? 'beer' : 'non-alcoholic beer'}${total - completed !== 1 ? 's' : ''} remaining`
               }
             </p>
             
@@ -75,7 +85,7 @@ export default function DashboardPage() {
             {completed > 0 && completed < total && (
               <div className="mt-4 pt-4 border-t border-blue-200">
                 <p className="text-blue-600 text-sm mb-2">
-                  Don't want to rate all beers? You can end the survey early.
+                  Don't want to rate all {drinksAlcohol ? 'beers' : 'non-alcoholic beers'}? You can end the survey early.
                 </p>
                 <button
                   onClick={handleEndSurveyEarly}
@@ -89,9 +99,9 @@ export default function DashboardPage() {
 
           {/* Beer Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {BEER_LIST.map((beer, index) => {
+            {beerList.map((beer, index) => {
               const isCompleted = completedBeers[index]
-              const beerNumber = index + 1
+              const beerLabel = drinksAlcohol ? `Beer ${index + 1}` : `Beer ${String.fromCharCode(65 + index)}`
 
               return (
                 <div
@@ -104,7 +114,7 @@ export default function DashboardPage() {
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Beer {beerNumber}
+                      {beerLabel}
                     </h3>
                     {isCompleted && (
                       <div className="flex items-center text-green-600">
@@ -122,7 +132,7 @@ export default function DashboardPage() {
                   <p className="text-gray-700 font-medium mb-4">{beer}</p>
                   
                   <Link
-                    href={`/beer/${beerNumber}`}
+                    href={`${beerRoutePrefix}${drinksAlcohol ? index + 1 : String.fromCharCode(65 + index)}`}
                     className={`inline-block w-full text-center py-2 px-4 rounded-md font-medium transition duration-200 ${
                       isCompleted
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'

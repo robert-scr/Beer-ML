@@ -29,17 +29,18 @@ class BeerRating(db.Model):
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     
-    # Taste preferences (0-10 scale)
-    white_dark = db.Column(db.Integer, nullable=False)  # White chocolate ↔ Dark chocolate
-    curry_soup = db.Column(db.Integer, nullable=False)  # Curry ↔ Potato soup
-    lemon_vanilla = db.Column(db.Integer, nullable=False)  # Lemon sorbet ↔ Vanilla ice cream
-    salmon_chicken = db.Column(db.Integer, nullable=False)  # Smoked salmon ↔ Grilled chicken
-    cucumber_pumpkin = db.Column(db.Integer, nullable=False)  # Pickled cucumbers ↔ Roasted pumpkin
-    espresso_latte = db.Column(db.Integer, nullable=False)  # Espresso ↔ Café latte
-    chili_risotto = db.Column(db.Integer, nullable=False)  # Chili con carne ↔ Mushroom risotto
-    grapefruit_banana = db.Column(db.Integer, nullable=False)  # Grapefruit ↔ Banana
-    cheese_mozzarella = db.Column(db.Integer, nullable=False)  # Blue cheese ↔ Fresh mozzarella
-    almonds_honey = db.Column(db.Integer, nullable=False)  # Salted almonds ↔ Honey-glazed nuts
+    # Taste preferences (0-10 scale for most, special handling for frequency and alcohol)
+    dark_white_chocolate = db.Column(db.Integer, nullable=False)  # Dark Chocolate (1) ↔ White Chocolate (10)
+    curry_cucumber = db.Column(db.Integer, nullable=False)  # Curry (1) ↔ Cucumber salad (10)
+    vanilla_lemon = db.Column(db.Integer, nullable=False)  # Vanilla ice cream (1) ↔ Lemon sorbet (10)
+    caramel_wasabi = db.Column(db.Integer, nullable=False)  # Caramel popcorn (1) ↔ Wasabi peas (10)
+    blue_mozzarella = db.Column(db.Integer, nullable=False)  # Blue cheese (1) ↔ Fresh mozzarella (10)
+    sparkling_sweet = db.Column(db.Integer, nullable=False)  # Sparkling water (1) ↔ Sweet soda (10)
+    barbecue_ketchup = db.Column(db.Integer, nullable=False)  # Barbecue sauce (1) ↔ Tomato ketchup (10)
+    tropical_winter = db.Column(db.Integer, nullable=False)  # Tropical paradise (1) ↔ Winter wonderland (10)
+    early_night = db.Column(db.Integer, nullable=False)  # Early bird (1) ↔ Night out (10)
+    beer_frequency = db.Column(db.String(20), nullable=False)  # 'never', 'rarely', 'often', 'very_often'
+    drinks_alcohol = db.Column(db.Boolean, nullable=False)  # true = drinks alcohol, false = doesn't
     
     submitted_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
@@ -57,9 +58,9 @@ def submit_rating():
         # Validate required fields
         required_fields = [
             'beer_name', 'rating', 'age', 'gender', 'latitude', 'longitude',
-            'white_dark', 'curry_soup', 'lemon_vanilla', 'salmon_chicken',
-            'cucumber_pumpkin', 'espresso_latte', 'chili_risotto',
-            'grapefruit_banana', 'cheese_mozzarella', 'almonds_honey'
+            'dark_white_chocolate', 'curry_cucumber', 'vanilla_lemon', 'caramel_wasabi',
+            'blue_mozzarella', 'sparkling_sweet', 'barbecue_ketchup',
+            'tropical_winter', 'early_night', 'beer_frequency', 'drinks_alcohol'
         ]
         
         for field in required_fields:
@@ -72,14 +73,23 @@ def submit_rating():
         
         # Validate preference ranges
         preference_fields = [
-            'white_dark', 'curry_soup', 'lemon_vanilla', 'salmon_chicken',
-            'cucumber_pumpkin', 'espresso_latte', 'chili_risotto',
-            'grapefruit_banana', 'cheese_mozzarella', 'almonds_honey'
+            'dark_white_chocolate', 'curry_cucumber', 'vanilla_lemon', 'caramel_wasabi',
+            'blue_mozzarella', 'sparkling_sweet', 'barbecue_ketchup',
+            'tropical_winter', 'early_night'
         ]
         
         for field in preference_fields:
             if not (0 <= data[field] <= 10):
                 return jsonify({'error': f'{field} must be between 0 and 10'}), 400
+        
+        # Validate beer frequency
+        valid_frequencies = ['never', 'rarely', 'often', 'very_often']
+        if data['beer_frequency'] not in valid_frequencies:
+            return jsonify({'error': 'Invalid beer_frequency value'}), 400
+        
+        # Validate drinks_alcohol (boolean)
+        if not isinstance(data['drinks_alcohol'], bool):
+            return jsonify({'error': 'drinks_alcohol must be a boolean'}), 400
         
         # Create new beer rating record
         rating_record = BeerRating(
@@ -89,16 +99,17 @@ def submit_rating():
             gender=data['gender'],
             latitude=data['latitude'],
             longitude=data['longitude'],
-            white_dark=data['white_dark'],
-            curry_soup=data['curry_soup'],
-            lemon_vanilla=data['lemon_vanilla'],
-            salmon_chicken=data['salmon_chicken'],
-            cucumber_pumpkin=data['cucumber_pumpkin'],
-            espresso_latte=data['espresso_latte'],
-            chili_risotto=data['chili_risotto'],
-            grapefruit_banana=data['grapefruit_banana'],
-            cheese_mozzarella=data['cheese_mozzarella'],
-            almonds_honey=data['almonds_honey']
+            dark_white_chocolate=data['dark_white_chocolate'],
+            curry_cucumber=data['curry_cucumber'],
+            vanilla_lemon=data['vanilla_lemon'],
+            caramel_wasabi=data['caramel_wasabi'],
+            blue_mozzarella=data['blue_mozzarella'],
+            sparkling_sweet=data['sparkling_sweet'],
+            barbecue_ketchup=data['barbecue_ketchup'],
+            tropical_winter=data['tropical_winter'],
+            early_night=data['early_night'],
+            beer_frequency=data['beer_frequency'],
+            drinks_alcohol=data['drinks_alcohol']
         )
         
         db.session.add(rating_record)

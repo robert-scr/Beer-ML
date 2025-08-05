@@ -8,16 +8,17 @@ export interface UserProfile {
 }
 
 export interface TastePreferences {
-  white_dark: number
-  curry_soup: number
-  lemon_vanilla: number
-  salmon_chicken: number
-  cucumber_pumpkin: number
-  espresso_latte: number
-  chili_risotto: number
-  grapefruit_banana: number
-  cheese_mozzarella: number
-  almonds_honey: number
+  dark_white_chocolate: number // Dark Chocolate (1) to White Chocolate (10)
+  curry_cucumber: number // Curry (1) to Cucumber salad (10)
+  vanilla_lemon: number // Vanilla ice cream (1) to Lemon sorbet (10)
+  caramel_wasabi: number // Caramel popcorn (1) to Wasabi peas (10)
+  blue_mozzarella: number // Blue cheese (1) to Fresh mozzarella (10)
+  sparkling_sweet: number // Sparkling water (1) to Sweet soda (10)
+  barbecue_ketchup: number // Barbecue sauce (1) to Tomato ketchup (10)
+  tropical_winter: number // Tropical paradise (1) to Winter wonderland (10)
+  early_night: number // Early bird (1) to Night out (10)
+  beer_frequency: string // 'never', 'rarely', 'often', 'very_often'
+  drinks_alcohol: boolean // true = drinks alcohol, false = doesn't drink alcohol
 }
 
 export interface BeerRatingState {
@@ -44,16 +45,17 @@ const initialProfile: UserProfile = {
 }
 
 const initialPreferences: TastePreferences = {
-  white_dark: 5,
-  curry_soup: 5,
-  lemon_vanilla: 5,
-  salmon_chicken: 5,
-  cucumber_pumpkin: 5,
-  espresso_latte: 5,
-  chili_risotto: 5,
-  grapefruit_banana: 5,
-  cheese_mozzarella: 5,
-  almonds_honey: 5,
+  dark_white_chocolate: 5,
+  curry_cucumber: 5,
+  vanilla_lemon: 5,
+  caramel_wasabi: 5,
+  blue_mozzarella: 5,
+  sparkling_sweet: 5,
+  barbecue_ketchup: 5,
+  tropical_winter: 5,
+  early_night: 5,
+  beer_frequency: 'rarely',
+  drinks_alcohol: true,
 }
 
 export const useBeerRatingStore = create<BeerRatingState>((set, get) => ({

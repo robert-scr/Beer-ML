@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useBeerRatingStore } from '@/store/beerRatingStore'
-import { TASTE_PREFERENCES } from '@/lib/constants'
+import { TASTE_PREFERENCES, BEER_FREQUENCY_OPTIONS } from '@/lib/constants'
 
 export default function PreferencesPage() {
   const router = useRouter()
@@ -30,6 +30,20 @@ export default function PreferencesPage() {
     }))
   }
 
+  const handleSelectChange = (key: keyof typeof preferences, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [key]: value,
+    }))
+  }
+
+  const handleCheckboxChange = (key: keyof typeof preferences, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      [key]: checked,
+    }))
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setPreferences(formData)
@@ -46,6 +60,7 @@ export default function PreferencesPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Slider-based preferences */}
             {TASTE_PREFERENCES.map((preference, index) => (
               <div key={preference.key} className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -53,7 +68,7 @@ export default function PreferencesPage() {
                     {index + 1}. {preference.label}
                   </h3>
                   <span className="text-sm font-medium text-gray-500">
-                    {formData[preference.key]}/10
+                    {formData[preference.key] as number}/10
                   </span>
                 </div>
                 
@@ -68,7 +83,7 @@ export default function PreferencesPage() {
                       type="range"
                       min="0"
                       max="10"
-                      value={formData[preference.key]}
+                      value={formData[preference.key] as number}
                       onChange={(e) => handleSliderChange(preference.key, parseInt(e.target.value))}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                     />
@@ -81,6 +96,43 @@ export default function PreferencesPage() {
                 </div>
               </div>
             ))}
+
+            {/* Beer frequency dropdown */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                10. How often do you drink beer?
+              </h3>
+              <select
+                value={formData.beer_frequency}
+                onChange={(e) => handleSelectChange('beer_frequency', e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                {BEER_FREQUENCY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Alcohol consumption checkbox */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                11. Alcohol Consumption
+              </h3>
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="drinks_alcohol"
+                  checked={formData.drinks_alcohol}
+                  onChange={(e) => handleCheckboxChange('drinks_alcohol', e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="drinks_alcohol" className="text-gray-700">
+                  I drink alcohol
+                </label>
+              </div>
+            </div>
 
             <div className="pt-6">
                           <button
