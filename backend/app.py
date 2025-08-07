@@ -45,6 +45,7 @@ CORS(app, resources={
         "origins": [
             "http://localhost:3000", 
             "http://127.0.0.1:3000",
+            "http://0.0.0.0:3000"
             "http://10.100.89.181:3000",  # Network IP
             "*"  # Allow all origins for development
         ],
