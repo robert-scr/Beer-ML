@@ -76,9 +76,14 @@ class SimilarityBeerPredictor(BaseBeerPredictor):
         beer_ratings = df_clean.pivot_table(
             index='user_id', 
             columns='beer_name', 
-            values='rating',
-            fill_value=0  # Fill missing ratings with 0
+            values='rating'
         ).reset_index()
+        
+        # Fill missing ratings with mean rating for each beer
+        beer_columns = [col for col in beer_ratings.columns if col != 'user_id']
+        for beer_col in beer_columns:
+            mean_rating = beer_ratings[beer_col].mean()
+            beer_ratings[beer_col] = beer_ratings[beer_col].fillna(mean_rating)
         
         # Merge user profiles with their beer ratings
         merged_data = pd.merge(user_profiles.drop(columns=['beer_name', 'rating']), 
