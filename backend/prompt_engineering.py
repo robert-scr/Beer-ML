@@ -169,7 +169,7 @@ The input features represent:
 - Taste preferences (scale 0-10): dark_white_chocolate, curry_cucumber, vanilla_lemon, caramel_wasabi, blue_mozzarella, sparkling_sweet, barbecue_ketchup, tropical_winter, early_night
 - beer_frequency: How often they drink beer (never, once_a_month, once_a_week, multiple_times_a_week)
 
-If the model is very unsure, return either "Beer 2" or "Beer 9" as a fallback.
+If the model is very unsure, return either 'Krombacher Pils', 'Staffelberg-Bräu Helle Vollbier' as a fallback.
 
 Here are examples of similar users and their preferred beers:
 
