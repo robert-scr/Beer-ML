@@ -29,6 +29,19 @@ class LLMBeerPredictor:
     based on user profiles and similar user preferences.
     """
     
+    # List of valid beer names that the LLM can recommend
+    VALID_BEER_NAMES = [
+        "Beck's Pils",
+        "Krombacher Pils", 
+        "Reckendorfer Dunkel",
+        "Paulaner Hefe Weißbier Naturtrüb",
+        "Oettinger Weizen Hell",
+        "Koestr. Schwarzbier",
+        "ABT Knauer Bock",
+        "Nothelfer Dunkel",
+        "Staffelberg-Bräu Helle Vollbier"
+    ]
+    
     def __init__(self, api_key: str = None, model: str = None):
         """
         Initialize the LLM predictor.
@@ -63,26 +76,34 @@ class LLMBeerPredictor:
             llm_response: Raw response from LLM
             
         Returns:
-            Beer name (e.g., "Beer 1") or None if not found
+            Beer name (actual beer name) or None if not found
         """
         # Clean the response
         response = llm_response.strip()
         
-        # Look for "Beer X" pattern where X is 1-9
+        # Check for actual beer names in the response
+        for beer_name in self.VALID_BEER_NAMES:
+            if beer_name in response:
+                return beer_name
+        
+        # Look for "Beer X" pattern and map back to actual names if needed
         beer_pattern = r'Beer\s+([1-9])\b'
         match = re.search(beer_pattern, response, re.IGNORECASE)
         
         if match:
-            beer_number = match.group(1)
-            return f"Beer {beer_number}"
+            beer_number = int(match.group(1))
+            # Map Beer X back to actual name
+            if 1 <= beer_number <= len(self.VALID_BEER_NAMES):
+                return self.VALID_BEER_NAMES[beer_number - 1]
         
-        # Fallback: look for just numbers 1-9 if "Beer" prefix is missing
+        # Fallback: look for just numbers 1-9 and map to actual names
         number_pattern = r'\b([1-9])\b'
         matches = re.findall(number_pattern, response)
         
         if matches:
-            # Take the first valid number
-            return f"Beer {matches[0]}"
+            beer_number = int(matches[0])
+            if 1 <= beer_number <= len(self.VALID_BEER_NAMES):
+                return self.VALID_BEER_NAMES[beer_number - 1]
         
         return None
     
@@ -153,9 +174,10 @@ class LLMBeerPredictor:
             recommended_beer = self._extract_beer_recommendation(llm_response)
             
             if not recommended_beer:
+                # Provide more detailed error info for debugging
                 return {
                     'success': False,
-                    'error': f'Could not extract valid beer recommendation from LLM response: {llm_response}',
+                    'error': f'Could not extract valid beer recommendation from LLM response. Expected one of: {self.VALID_BEER_NAMES}. Got: {llm_response}',
                     'recommended_beer': None,
                     'confidence': 0.0,
                     'llm_response': llm_response
