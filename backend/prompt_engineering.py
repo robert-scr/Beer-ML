@@ -74,9 +74,27 @@ def find_similar_users(input_features, df, n_similar=10):
     return df.iloc[similar_indices], similarities[similar_indices]
 
 def get_preferred_beer(user_row):
-    """Get the beer with highest rating for a user (Beer 1-9)"""
-    beer_cols = [col for col in user_row.index if col.startswith('Beer ') and col.split(' ')[1].isdigit()]
+    """Get the beer with highest rating for a user"""
+    # Expected beer column names (note the spaces before and after)
+    expected_beers = [
+        'Beck\'s Pils',
+        'Krombacher Pils', 
+        'Reckendorfer Dunkel',
+        'Paulaner Hefe Weißbier Naturtrüb',
+        'Oettinger Weizen Hell',
+        'Koestr. Schwarzbier',
+        'ABT Knauer Bock',
+        'Nothelfer Dunkel',
+        'Staffelberg-Bräu Helle Vollbier'
+    ]
     
+    # Find columns that match beer names (handle potential spacing issues)
+    beer_cols = []
+    for col in user_row.index:
+        col_stripped = col.strip()
+        if col_stripped in expected_beers:
+            beer_cols.append(col)
+
     if not beer_cols:
         return "Unknown"
     
@@ -98,18 +116,18 @@ def format_user_example(user_row, similarity_score=None):
     
     # Extract features
     features = {
-        'age': int(user_row['age']),
-        'gender': user_row['gender'],
-        'latitude': round(float(user_row['latitude']), 4),
-        'longitude': round(float(user_row['longitude']), 4),
-        'dark_white_chocolate': int(user_row['dark_white_chocolate']),
+        # 'age': int(user_row['age']),
+        # 'gender': user_row['gender'],
+        # 'latitude': round(float(user_row['latitude']), 4),
+        # 'longitude': round(float(user_row['longitude']), 4),
+        # 'dark_white_chocolate': int(user_row['dark_white_chocolate']),
         'curry_cucumber': int(user_row['curry_cucumber']),
         'vanilla_lemon': int(user_row['vanilla_lemon']),
         'caramel_wasabi': int(user_row['caramel_wasabi']),
         'blue_mozzarella': int(user_row['blue_mozzarella']),
         'sparkling_sweet': int(user_row['sparkling_sweet']),
         'barbecue_ketchup': int(user_row['barbecue_ketchup']),
-        'tropical_winter': int(user_row['tropical_winter']),
+        # 'tropical_winter': int(user_row['tropical_winter']),
         'early_night': int(user_row['early_night']),
         'beer_frequency': user_row['beer_frequency']
     }
@@ -144,20 +162,20 @@ def generate_few_shot_prompt(input_features_json):
         examples.append(example)
     
     # Create the final prompt
-    prompt = f"""You are a beer recommendation expert. Based on user preferences and demographics, predict which beer (Beer 1 through Beer 9) they would prefer most.
+    prompt = f"""You are a beer recommendation expert. Based on user preferences and demographics, predict which beer from Beck's Pils, Krombacher Pils, Reckendorfer Dunkel, Paulaner Hefe Weißbier Naturtrüb, Oettinger Weizen Hell, Koestr. Schwarzbier, ABT Knauer Bock, Nothelfer Dunkel, Staffelberg-Bräu Helle Vollbier they would prefer most.
 
 The input features represent:
-- age: User's age
-- gender: User's gender (male/female)
-- latitude/longitude: User's location coordinates
+
 - Taste preferences (scale 0-10): dark_white_chocolate, curry_cucumber, vanilla_lemon, caramel_wasabi, blue_mozzarella, sparkling_sweet, barbecue_ketchup, tropical_winter, early_night
 - beer_frequency: How often they drink beer (never, once_a_month, once_a_week, multiple_times_a_week)
+
+If the model is very unsure, return either 'Krombacher Pils', 'Staffelberg-Bräu Helle Vollbier' as a fallback.
 
 Here are examples of similar users and their preferred beers:
 
 {chr(10).join(examples)}
 
-Now predict the preferred beer for this new user:
+Now predict the preferred beer for this new user. Add a short explanation of why you chose this beer in a sentence for an average user in a simple, non-number related context:
 
 Input: {json.dumps(input_features, indent=2)}
 Output:"""
