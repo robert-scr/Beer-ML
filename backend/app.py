@@ -4,9 +4,19 @@ from flask_cors import CORS
 from datetime import datetime
 import os
 import sqlite3
+from predictor import get_predictor
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS to allow frontend requests
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Database configuration
 DATABASE_PATH = os.path.join(os.path.dirname(__file__), 'beer_study.db')
@@ -149,6 +159,50 @@ def get_stats():
         }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/predict', methods=['POST'])
+def predict_beer():
+    """Predict beer preferences based on user profile"""
+    print("=== PREDICTION ENDPOINT CALLED ===")
+    try:
+        data = request.get_json()
+        print(f"Received prediction request with data: {data}")
+        
+        # Validate required fields
+        required_fields = [
+            'age', 'gender', 'latitude', 'longitude',
+            'dark_white_chocolate', 'curry_cucumber', 'vanilla_lemon',
+            'caramel_wasabi', 'blue_mozzarella', 'sparkling_sweet',
+            'barbecue_ketchup', 'tropical_winter', 'early_night'
+        ]
+        
+        for field in required_fields:
+            if field not in data:
+                error_msg = f'Missing required field: {field}'
+                print(f"Validation error: {error_msg}")
+                return jsonify({'error': error_msg}), 400
+        
+        print("All required fields present, calling predictor...")
+        
+        # Get predictor instance
+        predictor = get_predictor('similarity')
+        
+        # Make prediction
+        result = predictor.predict(data)
+        print(f"Prediction result: {result}")
+        
+        return jsonify(result), 200 if result.get('success') else 400
+        
+    except Exception as e:
+        error_msg = f'Prediction failed: {str(e)}'
+        print(f"Exception in prediction: {error_msg}")
+        return jsonify({
+            'success': False,
+            'error': error_msg,
+            'recommended_beer': None,
+            'confidence': 0.0,
+            'similar_users_count': 0
+        }), 500
 
 if __name__ == '__main__':
     # Create database tables and enable WAL mode

@@ -81,7 +81,7 @@ export default function HomePage() {
               Experience the future of taste research with 
               <span className="text-shimmer font-medium relative mx-2">
                 AI-powered predictions
-                <span className="absolute inset-0 bg-purple-500/30 blur-lg rounded-full opacity-30 animate-pulse"></span>
+                <div className="absolute inset-0 bg-purple-500/30 blur-lg rounded-full opacity-30 animate-pulse"></div>
               </span>
               and ultra-premium design
             </p>
@@ -128,10 +128,7 @@ export default function HomePage() {
           isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
         }`}>
           <Link href="/profile" className="inline-block">
-            <MagneticButton 
-              asDiv={true} 
-              className="glass-button text-white text-xl font-medium py-6 px-12 rounded-full transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500/50 group relative overflow-hidden"
-            >
+            <MagneticButton className="glass-button text-white text-xl font-medium py-6 px-12 rounded-full transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500/50 group relative overflow-hidden">
               {/* Premium inner glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 to-blue-600/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
               

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+</head>
+<body>
+    <h1>Backend Connection Test</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testPredict()">Test Prediction Endpoint</button>
+    <div id="results"></div>
+
+    <script>
+        async function testHealth() {
+            const results = document.getElementById('results');
+            results.innerHTML = 'Testing health endpoint...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/health');
+                const data = await response.json();
+                results.innerHTML = `<h3>Health Test Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                results.innerHTML = `<h3>Health Test Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+
+        async function testPredict() {
+            const results = document.getElementById('results');
+            results.innerHTML = 'Testing prediction endpoint...';
+            
+            const testData = {
+                age: 25,
+                gender: 'male',
+                latitude: 52.5200,
+                longitude: 13.4050,
+                dark_white_chocolate: 5,
+                curry_cucumber: 3,
+                vanilla_lemon: 7,
+                caramel_wasabi: 4,
+                blue_mozzarella: 6,
+                sparkling_sweet: 8,
+                barbecue_ketchup: 5,
+                tropical_winter: 6,
+                early_night: 4
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                results.innerHTML = `<h3>Prediction Test Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                results.innerHTML = `<h3>Prediction Test Error:</h3><pre>${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

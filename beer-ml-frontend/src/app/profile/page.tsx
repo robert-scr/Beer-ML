@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useBeerRatingStore } from '@/store/beerRatingStore'
 import LocationPicker from '@/components/LocationPicker'
@@ -8,6 +8,7 @@ import LocationPicker from '@/components/LocationPicker'
 export default function ProfilePage() {
   const router = useRouter()
   const { profile, setProfile } = useBeerRatingStore()
+  const [isVisible, setIsVisible] = useState(false)
   
   const [formData, setFormData] = useState({
     age: profile.age?.toString() || '',
@@ -15,6 +16,10 @@ export default function ProfilePage() {
     latitude: profile.latitude,
     longitude: profile.longitude,
   })
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
 
   const handleLocationSelect = (lat: number, lng: number) => {
     setFormData(prev => ({
@@ -46,77 +51,146 @@ export default function ProfilePage() {
     ? { lat: formData.latitude, lng: formData.longitude }
     : null
 
+  const genderOptions = [
+    { value: '', label: 'Select your gender identity', disabled: true },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'non-binary', label: 'Non-binary' },
+    { value: 'prefer-not-to-say', label: 'Prefer not to say' },
+    { value: 'other', label: 'Other' },
+  ]
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Setup</h1>
-          <p className="text-gray-600 mb-8">
-            Please provide some basic information about yourself and select your location on the map.
-          </p>
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Progress indicator */}
+      <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="glass-surface rounded-full px-6 py-3 border border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+            <span className="text-white/80 text-sm font-light">Step 1 of 3</span>
+            <div className="w-2 h-2 bg-white/20 rounded-full"></div>
+            <div className="w-2 h-2 bg-white/20 rounded-full"></div>
+          </div>
+        </div>
+      </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-2">
-                Age
-              </label>
-              <input
-                type="number"
-                id="age"
-                min="18"
-                max="100"
-                value={formData.age}
-                onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300  text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your age"
-                required
-              />
-            </div>
+      <div className="relative z-10 max-w-4xl mx-auto px-6 pt-32 pb-20">
+        <div className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl md:text-6xl font-extralight mb-6 tracking-tight">
+              <span className="text-shimmer">Profile</span>
+              <br />
+              <span className="text-white/60">Setup</span>
+            </h1>
+            <p className="text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
+              Share your essential details to personalize your research experience
+            </p>
+          </div>
 
-            <div>
-              <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
-                Gender
-              </label>
-              <select
-                id="gender"
-                value={formData.gender}
-                onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              >
-                <option value="">Select your gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="non-binary">Non-binary</option>
-                <option value="prefer-not-to-say">Prefer not to say</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+          {/* Form Container */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="glass-card rounded-3xl p-8 md:p-12">
+              {/* Age Input */}
+              <div className="mb-8">
+                <label htmlFor="age" className="block text-lg font-light text-white mb-4">
+                  Age
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    id="age"
+                    min="18"
+                    max="100"
+                    value={formData.age}
+                    onChange={(e) => setFormData(prev => ({ ...prev, age: e.target.value }))}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent placeholder-white/40 backdrop-blur-sm transition-all duration-300"
+                    placeholder="Enter your age"
+                    required
+                  />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Home location
-              </label>
-              <p className="text-sm text-gray-500 mb-4">
-                Click on the map to select the location where you are based. This helps us understand regional preferences.
-              </p>
-              <LocationPicker
-                onLocationSelect={handleLocationSelect}
-                selectedLocation={selectedLocation}
-              />
-              {selectedLocation && (
-                <p className="text-sm text-gray-600 mt-2">
-                  Selected: {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
+              {/* Gender Select */}
+              <div className="mb-8">
+                <label htmlFor="gender" className="block text-lg font-light text-white mb-4">
+                  Gender Identity
+                </label>
+                <div className="relative">
+                  <select
+                    id="gender"
+                    value={formData.gender}
+                    onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
+                    className="w-full px-6 py-4 bg-white/5 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent backdrop-blur-sm transition-all duration-300 appearance-none"
+                    required
+                  >
+                    {genderOptions.map((option) => (
+                      <option 
+                        key={option.value} 
+                        value={option.value}
+                        disabled={option.disabled}
+                        className="bg-gray-900 text-white"
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
+              </div>
+
+              {/* Location Section */}
+              <div>
+                <label className="block text-lg font-light text-white mb-4">
+                  Home Location
+                </label>
+                <p className="text-white/60 mb-6 leading-relaxed">
+                  Select your location to help us understand regional taste preferences and cultural influences on beer enjoyment.
                 </p>
-              )}
+                
+                <LocationPicker
+                  onLocationSelect={handleLocationSelect}
+                  selectedLocation={selectedLocation}
+                />
+                
+                {selectedLocation && (
+                  <div className="mt-6 glass-surface rounded-2xl px-6 py-4 border border-white/10">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span className="text-white/80 text-sm font-light">
+                        Location confirmed: {selectedLocation.lat.toFixed(4)}°, {selectedLocation.lng.toFixed(4)}°
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Continue to Taste Preferences
-            </button>
+            {/* Submit Button */}
+            <div className="text-center">
+              <button
+                type="submit"
+                className="group glass-button text-white text-lg font-medium py-6 px-12 rounded-full transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black"
+              >
+                <span className="flex items-center gap-3">
+                  Continue to Preferences
+                  <svg 
+                    className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </button>
+            </div>
           </form>
         </div>
       </div>
