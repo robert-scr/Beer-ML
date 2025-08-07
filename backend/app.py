@@ -42,7 +42,12 @@ def get_configured_predictor():
 # Configure CORS to allow frontend requests
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+        "origins": [
+            "http://localhost:3000", 
+            "http://127.0.0.1:3000",
+            "http://10.100.89.181:3000",  # Network IP
+            "*"  # Allow all origins for development
+        ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
