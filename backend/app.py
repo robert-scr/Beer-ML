@@ -6,7 +6,38 @@ import os
 import sqlite3
 from predictor import get_predictor
 
+# Load environment variables
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not available, will use os.getenv() directly
+    pass
+
 app = Flask(__name__)
+
+# Predictor Configuration - Load from environment
+PREDICTOR_TYPE = os.getenv('PREDICTOR_TYPE', 'similarity')  # 'similarity' or 'llm'
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
+
+def get_configured_predictor():
+    """Get predictor instance based on environment configuration."""
+    try:
+        if PREDICTOR_TYPE.lower() == 'llm':
+            if not OPENAI_API_KEY:
+                print("⚠️  Warning: LLM predictor selected but OPENAI_API_KEY not set. Falling back to similarity predictor.")
+                return get_predictor('similarity')
+            
+            print(f"🤖 Using LLM predictor with model: {OPENAI_MODEL}")
+            return get_predictor('llm', api_key=OPENAI_API_KEY, model=OPENAI_MODEL)
+        else:
+            print("🔍 Using similarity-based predictor")
+            return get_predictor('similarity')
+    except Exception as e:
+        print(f"❌ Error initializing {PREDICTOR_TYPE} predictor: {e}")
+        print("🔄 Falling back to similarity predictor")
+        return get_predictor('similarity')
 
 # Configure CORS to allow frontend requests
 CORS(app, resources={
@@ -184,8 +215,8 @@ def predict_beer():
         
         print("All required fields present, calling predictor...")
         
-        # Get predictor instance
-        predictor = get_predictor('similarity')
+        # Get predictor instance based on configuration
+        predictor = get_configured_predictor()
         
         # Make prediction
         result = predictor.predict(data)
@@ -205,6 +236,25 @@ def predict_beer():
         }), 500
 
 if __name__ == '__main__':
+    # Print configuration info
+    print("🍺 Beer Study Application Starting...")
+    print("=" * 50)
+    print(f"📊 Predictor Type: {PREDICTOR_TYPE}")
+    if PREDICTOR_TYPE.lower() == 'llm':
+        api_key_status = "✅ Set" if OPENAI_API_KEY else "❌ Not Set"
+        print(f"🔑 OpenAI API Key: {api_key_status}")
+        print(f"🤖 OpenAI Model: {OPENAI_MODEL}")
+    print("=" * 50)
+    
+    # Test predictor configuration
+    try:
+        test_predictor = get_configured_predictor()
+        print("✅ Predictor initialized successfully")
+    except Exception as e:
+        print(f"❌ Predictor initialization failed: {e}")
+    
+    print()  # Empty line for readability
+    
     # Create database tables and enable WAL mode
     with app.app_context():
         db.create_all()

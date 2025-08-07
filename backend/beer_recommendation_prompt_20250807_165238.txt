@@ -1,0 +1,226 @@
+BEER RECOMMENDATION FEW-SHOT PROMPT
+==================================================
+
+Generated: 2025-08-07 16:52:38.460479
+
+INPUT FEATURES:
+{
+  "age": 25,
+  "gender": "female",
+  "latitude": 52.52,
+  "longitude": 13.405,
+  "dark_white_chocolate": 7,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 5,
+  "caramel_wasabi": 2,
+  "blue_mozzarella": 8,
+  "sparkling_sweet": 6,
+  "barbecue_ketchup": 4,
+  "tropical_winter": 7,
+  "early_night": 1,
+  "beer_frequency": "once_a_week"
+}
+
+GENERATED PROMPT:
+------------------------------
+You are a beer recommendation expert. Based on user preferences and demographics, predict which beer (Beer 1 through Beer 9) they would prefer most.
+
+The input features represent:
+- age: User's age
+- gender: User's gender (male/female)
+- latitude/longitude: User's location coordinates
+- Taste preferences (scale 0-10): dark_white_chocolate, curry_cucumber, vanilla_lemon, caramel_wasabi, blue_mozzarella, sparkling_sweet, barbecue_ketchup, tropical_winter, early_night
+- beer_frequency: How often they drink beer (never, once_a_month, once_a_week, multiple_times_a_week)
+
+Here are examples of similar users and their preferred beers:
+
+Input: {
+  "age": 24,
+  "gender": "female",
+  "latitude": 50.0868,
+  "longitude": 14.4213,
+  "dark_white_chocolate": 6,
+  "curry_cucumber": 5,
+  "vanilla_lemon": 5,
+  "caramel_wasabi": 3,
+  "blue_mozzarella": 5,
+  "sparkling_sweet": 2,
+  "barbecue_ketchup": 3,
+  "tropical_winter": 8,
+  "early_night": 1,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 2
+Input: {
+  "age": 27,
+  "gender": "female",
+  "latitude": 59.624,
+  "longitude": 17.8197,
+  "dark_white_chocolate": 8,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 7,
+  "caramel_wasabi": 0,
+  "blue_mozzarella": 5,
+  "sparkling_sweet": 8,
+  "barbecue_ketchup": 7,
+  "tropical_winter": 8,
+  "early_night": 6,
+  "beer_frequency": "once_a_month"
+}
+Output: Beer 2
+Input: {
+  "age": 24,
+  "gender": "female",
+  "latitude": 48.982,
+  "longitude": 8.41,
+  "dark_white_chocolate": 2,
+  "curry_cucumber": 2,
+  "vanilla_lemon": 1,
+  "caramel_wasabi": 0,
+  "blue_mozzarella": 3,
+  "sparkling_sweet": 5,
+  "barbecue_ketchup": 5,
+  "tropical_winter": 8,
+  "early_night": 2,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 2
+Input: {
+  "age": 21,
+  "gender": "female",
+  "latitude": 53.5534,
+  "longitude": 10.0223,
+  "dark_white_chocolate": 4,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 10,
+  "caramel_wasabi": 7,
+  "blue_mozzarella": 10,
+  "sparkling_sweet": 2,
+  "barbecue_ketchup": 3,
+  "tropical_winter": 5,
+  "early_night": 2,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 9
+Input: {
+  "age": 24,
+  "gender": "female",
+  "latitude": 48.9838,
+  "longitude": 8.4155,
+  "dark_white_chocolate": 2,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 1,
+  "caramel_wasabi": 0,
+  "blue_mozzarella": 3,
+  "sparkling_sweet": 5,
+  "barbecue_ketchup": 5,
+  "tropical_winter": 8,
+  "early_night": 2,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 1
+Input: {
+  "age": 24,
+  "gender": "female",
+  "latitude": 48.0009,
+  "longitude": 7.847,
+  "dark_white_chocolate": 2,
+  "curry_cucumber": 5,
+  "vanilla_lemon": 10,
+  "caramel_wasabi": 3,
+  "blue_mozzarella": 8,
+  "sparkling_sweet": 7,
+  "barbecue_ketchup": 5,
+  "tropical_winter": 7,
+  "early_night": 2,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 5
+Input: {
+  "age": 24,
+  "gender": "female",
+  "latitude": 47.9973,
+  "longitude": 7.8415,
+  "dark_white_chocolate": 3,
+  "curry_cucumber": 5,
+  "vanilla_lemon": 10,
+  "caramel_wasabi": 4,
+  "blue_mozzarella": 6,
+  "sparkling_sweet": 6,
+  "barbecue_ketchup": 5,
+  "tropical_winter": 7,
+  "early_night": 2,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 2
+Input: {
+  "age": 22,
+  "gender": "female",
+  "latitude": 53.2027,
+  "longitude": 6.7264,
+  "dark_white_chocolate": 5,
+  "curry_cucumber": 7,
+  "vanilla_lemon": 10,
+  "caramel_wasabi": 0,
+  "blue_mozzarella": 10,
+  "sparkling_sweet": 2,
+  "barbecue_ketchup": 8,
+  "tropical_winter": 8,
+  "early_night": 3,
+  "beer_frequency": "once_a_month"
+}
+Output: Beer 2
+Input: {
+  "age": 26,
+  "gender": "male",
+  "latitude": 61.4963,
+  "longitude": 23.7714,
+  "dark_white_chocolate": 8,
+  "curry_cucumber": 4,
+  "vanilla_lemon": 2,
+  "caramel_wasabi": 9,
+  "blue_mozzarella": 0,
+  "sparkling_sweet": 7,
+  "barbecue_ketchup": 3,
+  "tropical_winter": 8,
+  "early_night": 6,
+  "beer_frequency": "once_a_week"
+}
+Output: Beer 1
+Input: {
+  "age": 27,
+  "gender": "male",
+  "latitude": 42.6638,
+  "longitude": 21.1648,
+  "dark_white_chocolate": 2,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 8,
+  "caramel_wasabi": 2,
+  "blue_mozzarella": 10,
+  "sparkling_sweet": 5,
+  "barbecue_ketchup": 2,
+  "tropical_winter": 8,
+  "early_night": 5,
+  "beer_frequency": "multiple_times_a_week"
+}
+Output: Beer 8
+
+Now predict the preferred beer for this new user:
+
+Input: {
+  "age": 25,
+  "gender": "female",
+  "latitude": 52.52,
+  "longitude": 13.405,
+  "dark_white_chocolate": 7,
+  "curry_cucumber": 3,
+  "vanilla_lemon": 5,
+  "caramel_wasabi": 2,
+  "blue_mozzarella": 8,
+  "sparkling_sweet": 6,
+  "barbecue_ketchup": 4,
+  "tropical_winter": 7,
+  "early_night": 1,
+  "beer_frequency": "once_a_week"
+}
+Output:
