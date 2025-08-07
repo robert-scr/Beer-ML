@@ -115,7 +115,7 @@ def main():
     
     xgb_alc = XGBRegressor(
         n_estimators=100,
-        max_depth=20,
+        max_depth=6,
         random_state=42,
         n_jobs=-1,
         verbosity=0

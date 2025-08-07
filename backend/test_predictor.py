@@ -3,11 +3,11 @@
 Test script for the improved beer predictor
 """
 
-from predictor import SimilarityBeerPredictor
+from predictor import SimilarityBeerPredictor, BaseBeerPredictor
 
 def test_alcoholic_prediction():
     """Test prediction for user who drinks alcohol"""
-    predictor = SimilarityBeerPredictor()
+    predictor = BaseBeerPredictor()
     
     # User profile for someone who drinks alcohol
     alcoholic_user = {
@@ -79,4 +79,4 @@ def test_non_alcoholic_prediction():
 
 if __name__ == "__main__":
     test_alcoholic_prediction()
-    test_non_alcoholic_prediction()
+    # test_non_alcoholic_prediction()

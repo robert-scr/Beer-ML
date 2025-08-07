@@ -12,6 +12,8 @@ import numpy as np
 from typing import Dict, List, Tuple, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import StandardScaler
+from prompt_engineering import generate_few_shot_prompt
+from json import dumps as json_dumps
 
 
 class BaseBeerPredictor:
@@ -27,7 +29,16 @@ class BaseBeerPredictor:
         Returns:
             Dictionary with prediction results
         """
-        raise NotImplementedError("Subclasses must implement predict method")
+        # read userprofile and delete the 'drinks_alcohol' key
+        user_profile = user_profile.copy()
+        user_profile.pop('drinks_alcohol', None)
+        
+        # convert user_profile to json
+        input_features = json_dumps(user_profile)
+        prompt = generate_few_shot_prompt(input_features)
+
+        # input the string in the prompt engineering 
+        return prompt
 
 
 class SimilarityBeerPredictor(BaseBeerPredictor):
