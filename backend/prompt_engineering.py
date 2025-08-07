@@ -74,17 +74,26 @@ def find_similar_users(input_features, df, n_similar=10):
     return df.iloc[similar_indices], similarities[similar_indices]
 
 def get_preferred_beer(user_row):
-    """Get the beer with highest rating for a user (Beer 1-9)"""
-    beer_cols = [
-    "Beck's Pils",
-    "Krombacher Pils", 
-    "Reckendorfer Dunkel",
-    "Paulaner Hefe Weißbier Naturtrüb",
-    "Oettinger Weizen Hell",
-    "Koestr. Schwarzbier",
-    "ABT Knauer Bock",
-    "Nothelfer Dunkel",
-    "Staffelberg-Bräu Helle Vollbier"]
+    """Get the beer with highest rating for a user"""
+    # Expected beer column names (note the spaces before and after)
+    expected_beers = [
+        'Beck\'s Pils',
+        'Krombacher Pils', 
+        'Reckendorfer Dunkel',
+        'Paulaner Hefe Weißbier Naturtrüb',
+        'Oettinger Weizen Hell',
+        'Koestr. Schwarzbier',
+        'ABT Knauer Bock',
+        'Nothelfer Dunkel',
+        'Staffelberg-Bräu Helle Vollbier'
+    ]
+    
+    # Find columns that match beer names (handle potential spacing issues)
+    beer_cols = []
+    for col in user_row.index:
+        col_stripped = col.strip()
+        if col_stripped in expected_beers:
+            beer_cols.append(col)
 
     if not beer_cols:
         return "Unknown"
