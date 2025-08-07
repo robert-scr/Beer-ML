@@ -2,8 +2,8 @@
 Beer Recommendation Predictor Module
 
 This module provides a modular interface for beer prediction algorithms.
-The current implementation uses similarity matching, but can be easily
-replaced with more sophisticated ML models.
+The current implementation supports both similarity matching and LLM-based
+prediction approaches.
 """
 
 import sqlite3
@@ -316,17 +316,36 @@ class SimilarityBeerPredictor(BaseBeerPredictor):
 
 
 # Factory function to get predictor instance
-def get_predictor(predictor_type: str = 'similarity') -> BaseBeerPredictor:
+def get_predictor(predictor_type: str = 'similarity', **kwargs) -> BaseBeerPredictor:
     """
     Factory function to get a predictor instance.
     
     Args:
-        predictor_type: Type of predictor ('similarity', 'ml', etc.)
+        predictor_type: Type of predictor ('similarity', 'llm')
+        **kwargs: Additional arguments for predictor initialization
+                 For LLM predictor: api_key, model
     
     Returns:
         Predictor instance
     """
     if predictor_type == 'similarity':
         return SimilarityBeerPredictor()
+    elif predictor_type == 'llm':
+        # Import LLM predictor only when needed to avoid dependency issues
+        try:
+            from llm_interface import LLMBeerPredictor
+            return LLMBeerPredictor(**kwargs)
+        except ImportError as e:
+            raise ImportError(f"LLM predictor requires additional dependencies: {e}")
     else:
-        raise ValueError(f"Unknown predictor type: {predictor_type}")
+        raise ValueError(f"Unknown predictor type: {predictor_type}. Supported types: 'similarity', 'llm'")
+
+# For backward compatibility
+def get_similarity_predictor() -> SimilarityBeerPredictor:
+    """Get similarity-based predictor (backward compatibility)."""
+    return SimilarityBeerPredictor()
+
+def get_llm_predictor(api_key: str = None, model: str = "gpt-4o-mini"):
+    """Get LLM-based predictor with specified configuration."""
+    from llm_interface import LLMBeerPredictor
+    return LLMBeerPredictor(api_key=api_key, model=model)

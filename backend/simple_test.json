@@ -1,0 +1,17 @@
+{
+  "age": 28,
+  "gender": "female", 
+  "latitude": 52.52,
+  "longitude": 13.405,
+  "dark_white_chocolate": 6,
+  "curry_cucumber": 4,
+  "vanilla_lemon": 8,
+  "caramel_wasabi": 3,
+  "blue_mozzarella": 7,
+  "sparkling_sweet": 9,
+  "barbecue_ketchup": 2,
+  "tropical_winter": 7,
+  "early_night": 5,
+  "drinks_alcohol": false,
+  "beer_frequency": "never"
+}
